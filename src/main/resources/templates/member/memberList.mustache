@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>회원 목록</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Lucide 아이콘 -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      margin: 0;
+      background-color: #f5f6f8;
+      font-family: 'Pretendard', sans-serif;
+    }
+
+    /* ✅ 사이드바 */
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background-color: #ffffff;
+      border-right: 1px solid #ddd;
+      padding: 30px 20px;
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
+
+    .sidebar h5 {
+      color: #333;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #333;
+      text-decoration: none;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      transition: background 0.2s ease;
+    }
+
+    .sidebar a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .main {
+      margin-left: 240px;
+      padding: 40px 30px;
+    }
+
+    .topbar {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .search-form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .search-form input {
+      flex: 1;
+    }
+
+    .member-list-wrapper {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    .member-row {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid #eee;
+      transition: background 0.2s ease;
+    }
+
+    .member-row:hover {
+      background-color: #f9f9f9;
+    }
+
+    .member-id a {
+      font-weight: 600;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .member-id a:hover {
+      text-decoration: underline;
+    }
+
+    .member-info {
+      font-size: 14px;
+      color: #666;
+      margin-left: auto;
+    }
+
+    /* ⭐ 즐겨찾기 토글 */
+    .star-icon {
+      color: #ccc;
+      margin-right: 12px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: color 0.2s;
+    }
+
+    .star-icon.active {
+      color: gold;
+    }
+
+    .paging {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .paging a {
+      margin: 0 6px;
+      color: #333;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ✅ 사이드바 -->
+<div class="sidebar">
+  <h5>회원 관리</h5>
+  <a href="/member/myPage"><i data-lucide="user"></i> 마이페이지</a>
+  <a href="/member/memberList"><i data-lucide="list"></i> 전체 회원</a>
+  <a href="/"><i data-lucide="home"></i> 홈</a>
+</div>
+
+<!-- ✅ 메인 -->
+<div class="main">
+  <div class="topbar">📋 전체 회원 목록</div>
+
+  <!-- 🔍 검색 -->
+  <form method="get" action="/member/memberList" class="search-form">
+    <input type="text" name="word" value="{{word}}" class="form-control" placeholder="아이디 검색">
+    <button type="submit" class="btn btn-outline-primary">검색</button>
+  </form>
+
+  <!-- 📋 리스트 -->
+  <div class="member-list-wrapper">
+    {{#memberPage.content}}
+    <div class="member-row">
+      <input type="checkbox" class="form-check-input me-3">
+      <span class="star-icon" onclick="this.classList.toggle('active')">☆</span>
+      <span class="member-id"><a href="/member/detail?no={{memberNo}}">{{memberId}}</a></span>
+      <span class="member-info">회원번호 #{{memberNo}}</span>
+    </div>
+    {{/memberPage.content}}
+
+    {{^memberPage.content}}
+    <div class="p-4 text-center text-muted">조회된 회원이 없습니다.</div>
+    {{/memberPage.content}}
+  </div>
+
+  <!-- 페이징 -->
+  <div class="paging">
+    {{#memberPage.hasPrevious}}
+      <a href="?page={{numberMinus}}&word={{word}}">← 이전</a>
+    {{/memberPage.hasPrevious}}
+
+    <span>{{numberPlus}} / {{memberPage.totalPages}}</span>
+
+    {{#memberPage.hasNext}}
+      <a href="?page={{numberPlus}}&word={{word}}">다음 →</a>
+    {{/memberPage.hasNext}}
+  </div>
+</div>
+
+<!-- 아이콘 초기화 -->
+<script>
+  lucide.createIcons();
+</script>
+
+</body>
+</html>

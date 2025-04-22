@@ -1,24 +1,195 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>홈</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous">
+  <meta charset="UTF-8">
+  <title>홈 | JPABoard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+   body {
+	  margin: 0;
+	  padding: 70px;
+	  background-image: url('/images/sky5.png');
+	  background-size: cover;
+	  background-position: center;
+	  background-repeat: no-repeat;
+	  font-family: 'Pretendard', sans-serif;
+	}
+    .dashboard-container {
+      max-width: 1280px;
+      margin: 30px auto;
+      display: grid;
+      grid-template-columns: 250px 1fr 280px;
+      gap: 20px;
+    }
+    .card {
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      padding: 20px;
+      background-color: #fff;
+    }
+    .weather-box {
+      background: linear-gradient(#547dbb, #385981);
+      color: #fff;
+      padding: 20px;
+      border-radius: 16px;
+    }
+    .weather-icon {
+      width: 32px;
+      height: 32px;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    .temperature {
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .weather-description, .rain-msg {
+      font-size: 14px;
+    }
+    .news-thumbnail {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+    }
+    .news-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 10px 0 5px;
+    }
+    .news-section .card {
+      padding: 0;
+      overflow: hidden;
+    }
+    .news-body {
+      padding: 16px 20px;
+    }
+    .card.karina-card img {
+      height: 700px;
+    }
+  </style>
 </head>
 <body>
 {{>layouts/header}}
+	<nav class="navbar fixed-top px-4 py-2"
+     style="background-color: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.3); box-shadow: none;">
+	  <div class="container-fluid d-flex justify-content-between align-items-center">
+	    
+	    <!-- 왼쪽 앱 아이콘 -->
+	    <button class="btn btn-light rounded-circle me-3">
+	      <i class="bi bi-grid-3x3-gap-fill"></i>
+	    </button>
 
-<div class="container mt-5">
-    <h2 class="mb-4">{{loginName}}님 반갑습니다 😊</h2>
+    <!-- 검색창 -->
+    <form class="d-flex flex-grow-1 mx-3">
+      <div class="input-group rounded-pill bg-light px-3" style="width: 100%;">
+        <span class="input-group-text border-0 bg-light">
+          <i class="bi bi-search text-muted"></i>
+        </span>
+        <input type="text" class="form-control border-0 bg-light" placeholder="웹 검색">
+      </div>
+    </form>
 
-    <div class="list-group">
-        <a href="/articles/index" class="list-group-item list-group-item-action">📰 Article 게시판</a>
-        <a href="/board/boardList" class="list-group-item list-group-item-action">📋 Board 게시판</a>
-        <a href="/member/login" class="list-group-item list-group-item-action">👤 로그인</a>
+   
+  </div>
+</nav>
+
+<!-- 상단 로그인 안내 박스 -->
+<div class="container mt-4">
+  <div class="alert d-flex justify-content-between align-items-center rounded-pill px-4 py-2 shadow-sm"
+     style="background-color: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.4);">
+    <div class="d-flex align-items-center">
+      <i class="bi bi-info-circle-fill text-primary me-2"></i>
+      {{#loginName}}<span class="fw-bold">{{loginName}}님, 안녕하세요 👋</span>{{/loginName}}
+      {{^loginName}}로그인하여 변경 내용 저장하기{{/loginName}}
     </div>
+    <div>
+      {{#loginName}}
+        <a href="/member/logout" class="text-danger text-decoration-none me-3"
+           onclick="return confirm('정말 로그아웃 하시겠습니까?');">로그아웃</a>
+      {{/loginName}}
+      {{^loginName}}
+        <a href="/member/login" class="text-primary text-decoration-none me-3">로그인</a>
+      {{/loginName}}
+      <button type="button" class="btn-close" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-container">
+  <!-- 왼쪽: 날씨, 시장, 바로가기, 추천 -->
+  <div>
+    <div class="card weather-box">
+      <div><strong>📍 서울</strong></div>
+      <div class="d-flex align-items-center my-2">
+        <img src="https://cdn-icons-png.flaticon.com/512/1779/1779940.png" class="weather-icon" alt="weather icon">
+        <div class="temperature" id="temp">16℃</div>
+      </div>
+      <div class="weather-description">비</div>
+      <div class="rain-msg">약 1시간 내에 비가 그칠 예정</div>
+      <div class="mt-2">
+        <a href="#" class="btn btn-sm btn-light text-dark">전체 일기 예보 보기</a>
+      </div>
+    </div>
+    <div class="card mt-3">
+      <h6>📈 시장</h6>
+      <ul class="list-unstyled">
+        <li>코스피: 2,722.99 🔻</li>
+        <li>코스닥: 871.42 🔺</li>
+        <li>환율: 1,367.88원 🔻</li>
+      </ul>
+    </div>
+    <div class="card mt-3">
+      <h6>📌 바로가기</h6>
+      <a href="/articles/index">📰 Article</a>
+      <a href="/board/boardList">📋 Board</a>
+      {{^loginName}}<a href="/member/login">👤 로그인</a>{{/loginName}}
+      {{^loginName}}<a href="/member/joinMember">📝 회원가입</a>{{/loginName}}
+      {{#loginName}}<a href="/member/myPage">🧑 마이페이지</a>{{/loginName}}
+      {{#loginName}}<a href="/member/logout" onclick="return confirm('정말 로그아웃 하시겠습니까?');">🔓 로그아웃</a>{{/loginName}}
+    </div>
+    <div class="card mt-3">
+      <h6>🎯 추천 컨텐츠</h6>
+      <ul class="list-unstyled">
+        <li>🔥 이달의 인기 게시물</li>
+        <li>📚 자바 백엔드 입문서</li>
+        <li>🎥 추천 유튜브 강의</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 가운데: 뉴스 영역 -->
+  <div class="news-section">
+    <div class="card">
+      <img src="/images/news.png" class="news-thumbnail" alt="main news">
+      <div class="news-body">
+        <div class="news-title">"장식 없는 무덤에 이름만 새기도록"… 교황 유언 공개</div>
+        <p class="mb-0 text-muted">아시아투데이 · 3시간 전</p>
+      </div>
+    </div>
+    <div class="card mt-3">
+      <img src="/images/star.png" class="news-thumbnail" alt="starbucks">
+      <div class="news-body">
+        <div class="news-title">스타벅스, 두번째 커피 60% 할인 전체 회원 대상 확대</div>
+        <p class="mb-0 text-muted">연합뉴스 · 4시간 전</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 오른쪽: 카리나 뉴스 -->
+  <div>
+    <div class="card karina-card">
+      <img src="/images/karina.png" class="news-thumbnail" alt="karina">
+      <div class="news-body">
+        <div class="news-title">카리나 출근.</div>
+        <p class="mb-0 text-muted">연예</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 {{>layouts/footer}}
