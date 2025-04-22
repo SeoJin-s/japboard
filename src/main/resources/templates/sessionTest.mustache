@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	{{#sessionDate}}
+		{{sessionDate}}님 반갑습니다? <br>
+		<a href="/dropSession">dropSession</a>
+	{{/sessionDate}}
+	
+	{{^sessionDate}}
+		sessionData값이 없어요.
+	{{/sessionDate}}
+</body>
+</html>
